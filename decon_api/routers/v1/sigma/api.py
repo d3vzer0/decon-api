@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from routers.v1.sigma.schema import Sigma, TargetPlatform
+from fastapi import APIRouter, HTTPException
+from decon_api.routers.v1.sigma.schema import Sigma, TargetPlatform
 
 
 router = APIRouter()
@@ -7,4 +7,8 @@ router = APIRouter()
 @router.post('/sigma/convert')
 async def convert_sigma(data: Sigma) -> dict:
     selected_backend = TargetPlatform[data.target.value].value()
-    return {'output': selected_backend.convert_rule(data.content)[0]}
+    try:
+        converted_rule = selected_backend.convert_rule(data.content)[0]
+    except Exception as err:
+        raise HTTPException(status_code=400, detail=str(err))
+    return {'output': converted_rule}
