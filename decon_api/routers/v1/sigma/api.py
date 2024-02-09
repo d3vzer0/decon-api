@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from decon_api.routers.v1.sigma.schema import Sigma, TargetPlatform
 
-
 router = APIRouter()
+
 
 @router.post('/sigma/convert')
 async def convert_sigma(data: Sigma) -> dict:
