@@ -50,18 +50,27 @@ class MitreAttck:
 
     @staticmethod
     def __make_related(actors, techniques, relationships):
+        actors_by_id = {a.actor['id']: a.actor['actor_id'] for (key, a) in actors.items()}
+        t_by_id = {t.technique['id']: t.technique['technique_id'] for (key, t) in techniques.items()}
+
         for relationship in relationships:
-            related_technique = techniques.get(relationship['target_ref'], None)
-            related_actor = actors.get(relationship['source_ref'], None)
-            if related_actor and related_technique:
+            has_technique = t_by_id.get(relationship['target_ref'], None)
+            has_actor = actors_by_id.get(relationship['source_ref'], None)
+
+            if has_actor and has_technique:
+                related_technique = techniques[has_technique]
+                related_actor = actors[has_actor]
+            
                 related_technique.technique['actors'].append({
                     'actor_id': related_actor.actor['actor_id'],
                     'name': related_actor.actor['name']
                 })
+
                 related_actor.actor['techniques'].append({
                     'technique_id': related_technique.technique['technique_id'],
                     'name': related_technique.technique['name']
                 })
+            
         return actors, techniques
 
     @classmethod
@@ -71,15 +80,18 @@ class MitreAttck:
         get_entries = requests.get(cti_url)
         get_entries = get_entries.text
 
-        actors, techniques, relationships = {}, {}, []
+        actors, techniques = {}, {}
+        relationships = []
         for entry in json.loads(get_entries)['objects']:
             if entry.get('revoked', False) == False:
                 if entry['type'] == 'attack-pattern':
                     technique_obj =  Technique.from_cti(entry)
                     techniques[technique_obj.technique['technique_id']] = technique_obj
+
                 elif entry['type'] == 'intrusion-set':
                     actor_obj = Actor.from_cti(entry)
                     actors[actor_obj.actor['actor_id']] = actor_obj
+
                 elif entry['type'] == 'relationship':
                     relationships.append(entry)
 

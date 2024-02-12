@@ -13,6 +13,7 @@ class Technique(BaseModel):
     data_sources: list[str]
     references: list
     is_subtechnique: bool
+    actors: list
     kill_chain_phases: list[str]
 
 
@@ -23,3 +24,4 @@ class Actor(BaseModel):
     references: list
     aliases: list[str]
     description: str
+    techniques: list
