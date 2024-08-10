@@ -1,13 +1,21 @@
 import requests
 import json
 
+
 class Technique:
     def __init__(self, technique):
         self.technique = technique
 
     @classmethod
-    def from_cti(cls, technique):
-        ''' Format technique to match expected API schema '''
+    def from_cti(cls, technique: dict) -> 'Technique':
+        """Format technique to match expected API schema
+
+        Args:
+            technique (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         technique = { 
             'id': technique['id'],
             'technique_id': technique['external_references'][0]['external_id'],
@@ -30,7 +38,15 @@ class Actor:
         self.actor = actor
 
     @classmethod
-    def from_cti(cls, actor):
+    def from_cti(cls, actor: dict) -> 'Actor':
+        """Format actor to match expected API schema
+
+        Args:
+            actor (dict): actor dictionary
+
+        Returns:
+            Actor: Actor class
+        """
         actor = {
             'id': actor['id'], 
             'actor_id': actor['external_references'][0]['external_id'],
@@ -44,12 +60,12 @@ class Actor:
 
 
 class MitreAttck:
-    def __init__(self, actors = None, techniques = None):
+    def __init__(self, actors: list = None, techniques: list = None):
         self.actors = actors
         self.techniques = techniques
 
     @staticmethod
-    def __make_related(actors, techniques, relationships):
+    def __make_related(actors, techniques: list, relationships):
         actors_by_id = {a.actor['id']: a.actor['actor_id'] for (key, a) in actors.items()}
         t_by_id = {t.technique['id']: t.technique['technique_id'] for (key, t) in techniques.items()}
 
@@ -75,6 +91,14 @@ class MitreAttck:
 
     @classmethod
     def from_cti(cls, cti_url='https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json'):
+        """Initialise MitreAttck class from Attck github
+
+        Args:
+            cti_url (str, optional): _description_. Defaults to 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json'.
+
+        Returns:
+            _type_: _description_
+        """
         # Since github does not return a valid json response header
         # we have to load the response as text first and parse afterwards
         get_entries = requests.get(cti_url)

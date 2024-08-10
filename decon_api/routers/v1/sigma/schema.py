@@ -24,4 +24,3 @@ class Sigma(BaseModel):
             return sigma_content
         except Exception as exc:
             raise ValueError(str(exc))
-
