@@ -13,6 +13,8 @@ pysigma-backend-microsoft365defender = "^0.2.3"
 pydantic = "^2.6.1"
 fastapi = "^0.109.2"
 uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
+pysigma-backend-splunk = "^1.1.0"
+pysigma-backend-elasticsearch = "^1.1.1"
 
 
 [build-system]
