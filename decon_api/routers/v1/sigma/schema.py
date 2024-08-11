@@ -13,7 +13,7 @@ from sigma.validators.core import validators
 class TargetPlatform(Enum):
     m365d = Microsoft365DefenderBackend
     splunk = SplunkBackend
-    elasticsearch = LuceneBackend
+    lucene = LuceneBackend
 
 
 class Sigma(BaseModel):
