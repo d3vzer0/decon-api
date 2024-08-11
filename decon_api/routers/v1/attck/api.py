@@ -7,6 +7,7 @@ router = APIRouter()
 
 attck = MitreAttck.from_cti()
 
+
 @router.get('/attck/actor/{actor_id}')
 async def get_actor(actor_id: str) -> Actor:
     get_actor = attck.actors.get(actor_id, None)
