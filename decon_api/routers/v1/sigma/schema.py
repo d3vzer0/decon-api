@@ -3,6 +3,7 @@ from pydantic import BaseModel, field_validator
 from enum import Enum
 from sigma.backends.microsoft365defender import Microsoft365DefenderBackend
 from sigma.backends.splunk import SplunkBackend
+from sigma.backends.elasticsearch import LuceneBackend
 
 from sigma.rule import SigmaRule
 from sigma.validation import SigmaValidator
@@ -12,6 +13,7 @@ from sigma.validators.core import validators
 class TargetPlatform(Enum):
     m365d = Microsoft365DefenderBackend
     splunk = SplunkBackend
+    elasticsearch = LuceneBackend
 
 
 class Sigma(BaseModel):
